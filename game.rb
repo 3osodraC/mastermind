@@ -21,13 +21,13 @@ class Game
     .underline}.\nAfter each guess, #{'the code maker will give feedback'.underline} to the code\nbreaker using #{
     'PINS'.bold}."
 
-    puts "\n#{'RED PINS'.colorize(:red).bold} denote an accurate guess.\n#{
-    'WHITE PINS'.bold} denote an accurate guess, but in the wrong position.\n#{
-    'NO PINS'.bold.colorize(:black).on_white} denote an incorrect guess."
+    puts "\n#{'RED PINS'.colorize(:red).bold}   (#{'⬢'.colorize(:red)}) denote an accurate guess.\n#{
+    'WHITE PINS'.bold} (⬢) denote an accurate guess, but in the wrong position.\n#{
+    'NO PINS'.bold.colorize(:black).on_white}    (⬡) denote an inaccurate guess."
 
     puts "\n#{'NOTE'.underline}: The position of the pins are #{
     'not related'.underline} to the position\nof the colors, you will not know #{
-    'which'.italic} guesse is right or wrong."
+    'which'.italic} guess is right or wrong."
   end
 end
 
