@@ -22,13 +22,23 @@ class Game
     'PINS'.bold}."
 
     puts "\n#{'RED PINS'.colorize(:red).bold}   (#{'⬢'.colorize(:red)}) denote an accurate guess.\n#{
-    'WHITE PINS'.bold} (⬢) denote an accurate guess, but in the wrong position.\n#{
+    'WHITE PINS'.bold} (⬢) denote a right color, but in the wrong position.\n#{
     'NO PINS'.bold.colorize(:black).on_white}    (⬡) denote an inaccurate guess."
 
     puts "\n#{'NOTE'.underline}: The position of the pins are #{
     'not related'.underline} to the position\nof the colors, you will not know #{
     'which'.italic} guess is right or wrong."
   end
+
+  # PSEUDO:
+
+  # prompt: prompts 4 colors separated by spaces, verify by splitting the string and checking if all the colors exist,
+  # also, store all guesses.
+
+  # feedback: scans guess and returns pins.
+
+  # update_board: add the colors to the board, maybe with a method with conditionals for each one of the 6 colors,
+  # then it calls #feedback and adds the pins to the board.
 end
 
 game = Game.new
