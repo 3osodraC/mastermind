@@ -3,12 +3,21 @@ require 'colorize'
 # Mastermind game class.
 class Game
   def initialize
-    @board = { colors: [nil, nil, nil, nil], keys: [nil, nil, nil, nil] }
-    @possible_colors = %w[red blue green yellow cyan purple]
+    @game_info = { guess: Array.new(4), keys: Array.new(4), code: Array.new(4) }
+    @colors = %w[red blue green yellow cyan purple]
   end
 
-  # prompt: prompts 4 colors separated by spaces, verify by splitting the string and checking if all the colors exist,
-  # also, store all guesses.
+  def make_code
+    @game_info[:code].map! { @colors[rand(6)] }
+  end
+
+  def play
+    tutorial
+    make_code
+    prompt
+  end
+
+  # Prompts user, validates prompt, stores guess.
   def prompt
     prompt = []
     until valid_prompt?(prompt)
@@ -17,9 +26,9 @@ class Game
       'red'.colorize(:red)}, #{'blue'.colorize(:blue)}, #{'green'.colorize(:green)}, #{
       'yellow'.colorize(:light_yellow)}, #{'cyan'.colorize(:cyan)}, & #{'purple'.colorize(:magenta)}"
       print 'Guess: '.bold
-      prompt = gets.chomp.split
+      prompt = gets.chomp.downcase.split
     end
-    @board[:colors] = prompt
+    @game_info[:guess] = prompt
   end
 
   def tutorial
@@ -44,10 +53,12 @@ class Game
     puts "\n#{'NOTE'.underline}: The position of the pins are #{
     'not related'.underline} to the position\nof the colors, you will not know #{
     'which'.italic} one is right or wrong."
+
+    puts "\nAlright, Let's play!\n".bold
   end
 
   def valid_prompt?(prompt)
-    return true if (prompt - @possible_colors).empty? && prompt.size == 4
+    return true if (prompt - @colors).empty? && prompt.size == 4
   end
 
   # PSEUDO:
@@ -60,8 +71,9 @@ class Game
   # valid_prompt?: checks if guess matches colors array.
 
   # play: executes all methods needed to play the game.
+
+  # make_code: choose a random number (0-5) 4 times, this will be the code maker's code.
 end
 
 game = Game.new
-game.tutorial
-game.prompt
+game.play
