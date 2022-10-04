@@ -3,12 +3,26 @@ require 'colorize'
 # Mastermind game class.
 class Game
   def initialize
-    @game_info = { guess: Array.new(4), keys: Array.new(4), code: Array.new(4) }
+    @code = Array.new(4)
+    @board = { guess: [], pins: [] }
     @colors = %w[red blue green yellow cyan purple]
   end
 
+  def define_pins
+    # 0 == no pin | 1 == white pin | 2 == red pin
+    @board[:guess].each_with_index do |item, i|
+      if item == @code[i] && @board[:pins].size < 4
+        @board[:pins] << 2
+      elsif item == @code[i] && @board[:pins].size >= 4
+        @board[:pins].pop
+        @board[:pins] << 2
+      end
+    end
+  end
+
   def make_code
-    @game_info[:code].map! { @colors[rand(6)] }
+    @code.map! { @colors[rand(6)] }
+    p @code
   end
 
   def play
@@ -17,7 +31,7 @@ class Game
     prompt
   end
 
-  # Prompts user, validates prompt, stores guess.
+  # Prompts & stores guess.
   def prompt
     prompt = []
     until valid_prompt?(prompt)
@@ -28,7 +42,7 @@ class Game
       print 'Guess: '.bold
       prompt = gets.chomp.downcase.split
     end
-    @game_info[:guess] = prompt
+    @board[:guess] << prompt
   end
 
   def tutorial
@@ -63,7 +77,7 @@ class Game
 
   # PSEUDO:
 
-  # feedback: scans guess and returns pins.
+  # define_pins: scans guess and returns pins.
 
   # update_board: add the colors to the board, maybe with a method with conditionals for each one of the 6 colors,
   # then it calls #feedback and adds the pins to the board.
@@ -71,8 +85,6 @@ class Game
   # valid_prompt?: checks if guess matches colors array.
 
   # play: executes all methods needed to play the game.
-
-  # make_code: choose a random number (0-5) 4 times, this will be the code maker's code.
 end
 
 game = Game.new
