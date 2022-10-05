@@ -11,28 +11,32 @@ class Game
   def define_pins
     # 0 == no pin | 1 == white pin | 2 == red pin
     @board[:guess].each_with_index do |item, i|
-      if item == @code[i] && @board[:pins].size < 4
-        @board[:pins] << 2
-      elsif item == @code[i] && @board[:pins].size >= 4
-        @board[:pins].pop
-        @board[:pins] << 2
+      @code.each_with_index do |itm, j|
+        if item == itm && i != j
+          @board[:pins].push(1)
+        elsif item == itm && i == j
+          @board[:pins].push(2)
+        end
       end
     end
+    p @board[:guess]
+    p @board[:pins]
   end
 
   def make_code
     @code.map! { @colors[rand(6)] }
-    p @code
   end
 
   def play
     tutorial
     make_code
     prompt
+    define_pins
   end
 
   # Prompts & stores guess.
   def prompt
+    p @code
     prompt = []
     until valid_prompt?(prompt)
       puts "\nMake your guess by typing #{'four colors separated by spaces'.underline}."
@@ -42,7 +46,7 @@ class Game
       print 'Guess: '.bold
       prompt = gets.chomp.downcase.split
     end
-    @board[:guess] << prompt
+    @board[:guess] = prompt
   end
 
   def tutorial
