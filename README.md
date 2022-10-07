@@ -1,3 +1,3 @@
 # mastermind
 
-## under development
+## in development
