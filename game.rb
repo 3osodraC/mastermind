@@ -9,7 +9,7 @@ class Game
   end
 
   def define_pins
-    # 0 == no pin | 1 == white pin | 2 == red pin
+    # 1 == white pin | 2 == red pin
     @board[:guess].each_with_index do |item, i|
       @code.each_with_index do |itm, j|
         if item == itm && i != j
@@ -19,12 +19,14 @@ class Game
         end
       end
     end
-    p @board[:guess]
+    @board[:pins] = @board[:pins].shuffle
     p @board[:pins]
   end
 
   def make_code
-    @code.map! { @colors[rand(6)] }
+    code = @colors.shuffle
+    code.pop(2)
+    @code = code
   end
 
   def play
