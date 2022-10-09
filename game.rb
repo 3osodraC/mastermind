@@ -9,7 +9,11 @@ class Game
   end
 
   def define_pins
+    # this nested loop checks for white pins by checking if the current element in both
+    # loops are equal, but the index is different, and red pins by checking if both the
+    # element and index are equal in both loops.
     # 1 == white pin | 2 == red pin
+
     @board[:guess].each_with_index do |item, i|
       @code.each_with_index do |itm, j|
         if item == itm && i != j
@@ -83,14 +87,8 @@ class Game
 
   # PSEUDO:
 
-  # define_pins: scans guess and returns pins.
-
   # update_board: add the colors to the board, maybe with a method with conditionals for each one of the 6 colors,
   # then it calls #feedback and adds the pins to the board.
-
-  # valid_prompt?: checks if guess matches colors array.
-
-  # play: executes all methods needed to play the game.
 end
 
 game = Game.new
