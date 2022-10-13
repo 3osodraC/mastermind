@@ -4,7 +4,8 @@ require 'colorize'
 class Game
   def initialize
     @code = Array.new(4)
-    @board = { guess: [], pins: [] }
+    @board = []
+    @row = { guess: [], pins: [] }
     @colors = %w[red blue green yellow cyan purple]
   end
 
@@ -14,17 +15,17 @@ class Game
     # element and index are equal in both loops.
     # 1 == white pin | 2 == red pin
 
-    @board[:guess].each_with_index do |item, i|
+    @row[:guess].each_with_index do |item, i|
       @code.each_with_index do |itm, j|
         if item == itm && i != j
-          @board[:pins].push(1)
+          @row[:pins].push(1)
         elsif item == itm && i == j
-          @board[:pins].push(2)
+          @row[:pins].push(2)
         end
       end
     end
-    @board[:pins] = @board[:pins].shuffle
-    p @board[:pins]
+    @row[:pins] = @row[:pins].shuffle
+    p @row[:pins]
   end
 
   def make_code
@@ -52,7 +53,7 @@ class Game
       print 'Guess: '.bold
       prompt = gets.chomp.downcase.split
     end
-    @board[:guess] = prompt
+    @row[:guess] = prompt
   end
 
   def tutorial
