@@ -9,18 +9,28 @@ class Game
     @colors = %w[red blue green yellow cyan purple]
   end
 
-  def define_pins
-    # this nested loop checks for white pins by checking if the current element in both
-    # loops are equal, but the index is different, and red pins by checking if both the
-    # element and index are equal in both loops.
-    # 1 == white pin | 2 == red pin
+  # this nested loop checks for white pins by checking if the current element in both
+  # loops are equal, but the index is different, and red pins by checking if both the
+  # element and index are equal in both loops.
 
-    @row[:guess].each_with_index do |item, i|
-      @code.each_with_index do |itm, j|
+  # variable[index] = nil inside if/elsif was a little workaround to a bug: if the
+  # code was, for example, "red blue cyan green" and the guess "red red cyan green"
+  # the pins would return as [2, 1, 2, 2], it's not supposed to do that.
+  def define_pins
+    guess_dummy = @row[:guess]
+    code_dummy = @code
+
+    # 1 == white pin | 2 == red pin
+    guess_dummy.each_with_index do |item, i|
+      code_dummy.each_with_index do |itm, j|
         if item == itm && i != j
           @row[:pins].push(1)
+          code_dummy[j] = nil
+          guess_dummy[i] = nil
         elsif item == itm && i == j
           @row[:pins].push(2)
+          code_dummy[j] = nil
+          guess_dummy[i] = nil
         end
       end
     end
