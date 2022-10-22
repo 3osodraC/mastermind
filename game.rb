@@ -9,28 +9,28 @@ class Game
     @colors = %w[red blue green yellow cyan purple]
   end
 
-  # this nested loop checks for white pins by checking if the current element in both
-  # loops are equal, but the index is different, and red pins by checking if both the
-  # element and index are equal in both loops.
+  # nested loop checks for white pins by checking if the current element in both loops
+  # are equal, but the index is different, and red pins by checking if both the element
+  # and index are equal in both loops.
 
-  # variable[index] = nil inside if/elsif was a little workaround to a bug: if the
+  # dup[index] = nil inside if/elsif was a little workaround to a bug: if the
   # code was, for example, "red blue cyan green" and the guess "red red cyan green"
   # the pins would return as [2, 1, 2, 2], it's not supposed to do that.
   def define_pins
-    guess_dummy = @row[:guess]
-    code_dummy = @code
+    guess_dup = @row[:guess].dup
+    code_dup = @code.dup
 
     # 1 == white pin | 2 == red pin
-    guess_dummy.each_with_index do |item, i|
-      code_dummy.each_with_index do |itm, j|
+    guess_dup.each_with_index do |item, i|
+      code_dup.each_with_index do |itm, j|
         if item == itm && i != j
           @row[:pins].push(1)
-          code_dummy[j] = nil
-          guess_dummy[i] = nil
+          code_dup[j] = nil
+          guess_dup[i] = nil
         elsif item == itm && i == j
           @row[:pins].push(2)
-          code_dummy[j] = nil
-          guess_dummy[i] = nil
+          code_dup[j] = nil
+          guess_dup[i] = nil
         end
       end
     end
@@ -47,8 +47,13 @@ class Game
   def play
     tutorial
     make_code
-    prompt
-    define_pins
+    12.times do |_item|
+      prompt
+      define_pins
+      @board << @row
+      @row = { guess: [], pins: [] }
+      p @board
+    end
   end
 
   # Prompts & stores guess.
@@ -64,6 +69,10 @@ class Game
       prompt = gets.chomp.downcase.split
     end
     @row[:guess] = prompt
+  end
+
+  def print_board
+    ç
   end
 
   def tutorial
