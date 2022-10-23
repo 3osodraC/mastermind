@@ -46,17 +46,25 @@ class Game
   def play
     tutorial
     make_code
-    p @code # debug
+    # p @code # debug
     12.times do |_item|
       prompt
       define_pins
+
       # \r moves cursor to line start, \e[A moves cursor up, \e[J
       # deletes everything after the cursor, \e[B moves cursor down.
       print "\r#{"\e[A\e[A\e[J\e[B" * 3}"
-      print_colors
+
+      print_guess
       print_pins
+      if win?(@row[:pins])
+        puts 'Congratulations! You did it! :D'.bold.colorize(:green)
+        break
+      end
+
       @row = { guess: [], pins: [] }
     end
+    puts 'Code maker wins :('.bold.colorize(:red) unless win?(@row[:pins])
   end
 
   # prompts & stores guess.
@@ -101,7 +109,11 @@ class Game
         print ' ⬢ '
       when 2
         print ' ⬢ '.colorize(:red)
-      else
+      end
+    end
+
+    if @row[:pins].size < 4
+      (4 - @row[:pins].size).times do
         print ' ⬡ '
       end
     end
@@ -136,6 +148,10 @@ class Game
 
   def valid_prompt?(prompt)
     return true if (prompt - @colors).empty? && prompt.size == 4
+  end
+
+  def win?(pins)
+    return true if pins == [2, 2, 2, 2]
   end
 end
 
