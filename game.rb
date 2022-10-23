@@ -73,7 +73,7 @@ class Game
     @row[:guess] = prompt
   end
 
-  def print_colors
+  def print_guess
     print '|'
     @row[:guess].each do |color|
       case color
