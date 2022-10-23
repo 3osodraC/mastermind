@@ -4,7 +4,6 @@ require 'colorize'
 class Game
   def initialize
     @code = Array.new(4)
-    @board = []
     @row = { guess: [], pins: [] }
     @colors = %w[red blue green yellow cyan purple]
   end
@@ -35,9 +34,9 @@ class Game
       end
     end
     @row[:pins] = @row[:pins].shuffle
-    p @row[:pins]
   end
 
+  # chooses 4 random colors.
   def make_code
     code = @colors.shuffle
     code.pop(2)
@@ -47,21 +46,24 @@ class Game
   def play
     tutorial
     make_code
+    p @code # debug
     12.times do |_item|
       prompt
       define_pins
-      @board << @row
+      # \r moves cursor to line start, \e[A moves cursor up, \e[J
+      # deletes everything after the cursor, \e[B moves cursor down.
+      print "\r#{"\e[A\e[A\e[J\e[B" * 3}"
+      print_colors
+      print_pins
       @row = { guess: [], pins: [] }
-      p @board
     end
   end
 
-  # Prompts & stores guess.
+  # prompts & stores guess.
   def prompt
-    p @code
     prompt = []
     until valid_prompt?(prompt)
-      puts "\nMake your guess by typing #{'four colors separated by spaces'.underline}."
+      puts "Make your guess by typing #{'four colors separated by spaces'.underline}."
       puts "Possible colors: #{
       'red'.colorize(:red)}, #{'blue'.colorize(:blue)}, #{'green'.colorize(:green)}, #{
       'yellow'.colorize(:light_yellow)}, #{'cyan'.colorize(:cyan)}, & #{'purple'.colorize(:magenta)}"
@@ -71,8 +73,39 @@ class Game
     @row[:guess] = prompt
   end
 
-  def print_board
-    ç
+  def print_colors
+    print '|'
+    @row[:guess].each do |color|
+      case color
+      when 'red'
+        print ' ⏺ '.colorize(:red)
+      when 'blue'
+        print ' ⏺ '.colorize(:blue)
+      when 'green'
+        print ' ⏺ '.colorize(:green)
+      when 'yellow'
+        print ' ⏺ '.colorize(:light_yellow)
+      when 'cyan'
+        print ' ⏺ '.colorize(:cyan)
+      when 'purple'
+        print ' ⏺ '.colorize(:magenta)
+      end
+    end
+  end
+
+  def print_pins
+    print '|'
+    @row[:pins].each do |pin|
+      case pin
+      when 1
+        print ' ⬢ '
+      when 2
+        print ' ⬢ '.colorize(:red)
+      else
+        print ' ⬡ '
+      end
+    end
+    print "|\n\n"
   end
 
   def tutorial
@@ -104,11 +137,6 @@ class Game
   def valid_prompt?(prompt)
     return true if (prompt - @colors).empty? && prompt.size == 4
   end
-
-  # PSEUDO:
-
-  # update_board: add the colors to the board, maybe with a method with conditionals for each one of the 6 colors,
-  # then it calls #feedback and adds the pins to the board.
 end
 
 game = Game.new
