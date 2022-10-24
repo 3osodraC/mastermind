@@ -133,7 +133,7 @@ class Game
 
     puts "\nYou, the code #{'BREAKER'.bold.colorize(:light_green)}, will try to #{"guess the code maker's code"
     .underline}.\nAfter each guess, #{'the code maker will give feedback'.underline} to the code\nbreaker using #{
-    'PINS'.bold}."
+    'PINS'.bold}. You will have #{'12 chances'.underline} to guess the code."
 
     puts "\n#{'RED PINS'.colorize(:red).bold}   (#{'⬢'.colorize(:red)}) denote an accurate guess.\n#{
     'WHITE PINS'.bold} (⬢) denote a right color, but in the wrong position.\n#{
