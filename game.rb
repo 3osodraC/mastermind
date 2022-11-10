@@ -8,45 +8,30 @@ class Game
     @colors = %w[red blue green yellow cyan purple]
   end
 
-  # nested loop checks for white pins by checking if the current element in both loops
-  # are equal, but the index is different, and red pins by checking if both the element
-  # and index are equal in both loops.
-
-  # dup[index] = nil inside if/elsif was a little workaround to a bug: if the
-  # code was, for example, "red blue cyan green" and the guess "red red cyan green"
-  # the pins would return as [2, 1, 2, 2], it's not supposed to do that.
+  # defines red pins by checking if values and idexes are equal in guess & @code
+  # defines white pins by checking if the value exists in another index inside @code
   def define_pins
-    guess_dup = @row[:guess].dup
-    code_dup = @code.dup
-
     # 1 == white pin | 2 == red pin
-    guess_dup.each_with_index do |item, i|
-      code_dup.each_with_index do |itm, j|
-        if item == itm && i != j
-          @row[:pins].push(1)
-          code_dup[j] = nil
-          guess_dup[i] = nil
-        elsif item == itm && i == j
-          @row[:pins].push(2)
-          code_dup[j] = nil
-          guess_dup[i] = nil
-        end
+
+    @row[:guess].each_with_index do |item, i|
+      if item == @code[i]
+        @row[:pins].push(2)
+      elsif @row[:guess].include?(@code[i])
+        @row[:pins].push(1)
       end
     end
+
     @row[:pins] = @row[:pins].shuffle
   end
 
   # chooses 4 random colors.
   def make_code
-    code = @colors.shuffle
-    code.pop(2)
-    @code = code
+    @code.map! { @colors[rand(6)] }
   end
 
   def play
     tutorial
     make_code
-    # p @code # debug
     12.times do |_item|
       prompt
       define_pins
