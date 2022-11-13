@@ -12,12 +12,15 @@ class Game
   # defines white pins by checking if the value exists in another index inside @code
   def define_pins
     # 1 == white pin | 2 == red pin
+    code_dummy = @code.dup
 
     @row[:guess].each_with_index do |item, i|
       if item == @code[i]
         @row[:pins].push(2)
-      elsif @row[:guess].include?(@code[i])
+        code_dummy.delete_at(i)
+      elsif code_dummy.include?(item) # && @row[:guess].index(item) != @code.index(item)
         @row[:pins].push(1)
+        code_dummy.delete_at(i)
       end
     end
 
@@ -33,6 +36,7 @@ class Game
     tutorial
     make_code
     12.times do |_item|
+      puts "code: #{@code}" # debug
       prompt
       define_pins
 
