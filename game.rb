@@ -8,30 +8,39 @@ class Game
     @colors = %w[red blue green yellow cyan purple]
   end
 
-  # defines red pins by checking if values and idexes are equal in guess & @code
-  # defines white pins by checking if the value exists in another index inside @code
+  # -> Defines red pins by checking if values and idexes are equal in guess & @code.
+  # -> Defines white pins by checking if the value exists in another index inside @code.
+  # -> checklist and false_pin_check, respectively, track how many times each color occurs
+  # in the guess, and false_pin_check stops define_pins from defining erroneous white pins
+  # if it detects that the guess has more occurences of that color than the @code itself.
   def define_pins
     # 1 == white pin | 2 == red pin
-    code_dummy = @code.dup
+
+    false_pin_check = false
+    checklist = { 'red' => 0, 'blue' => 0, 'green' => 0, 'yellow' => 0, 'cyan' => 0, 'purple' => 0 }
 
     @row[:guess].each_with_index do |item, i|
+      false_pin_check = true if checklist[item] >= @code.count(item)
+
       if item == @code[i]
         @row[:pins].push(2)
-        code_dummy.delete_at(i)
-      elsif code_dummy.include?(item) # && @row[:guess].index(item) != @code.index(item)
+        @row[:pins].delete_at(@row[:pins].index(1)) if false_pin_check
+      elsif @code.include?(item) && !false_pin_check
         @row[:pins].push(1)
-        code_dummy.delete_at(i)
+        checklist[item] += 1
       end
+      false_pin_check = false
     end
 
     @row[:pins] = @row[:pins].shuffle
   end
 
-  # chooses 4 random colors.
+  # Chooses 4 random colors by choosing 4 random values from the @colors array.
   def make_code
     @code.map! { @colors[rand(6)] }
   end
 
+  # Makes the game work by calling all necessary methods.
   def play
     tutorial
     make_code
@@ -56,7 +65,7 @@ class Game
     puts 'Code maker wins :('.bold.colorize(:red) unless win?(@row[:pins])
   end
 
-  # prompts & stores guess.
+  # Prompts & stores guess.
   def prompt
     prompt = []
     until valid_prompt?(prompt)
