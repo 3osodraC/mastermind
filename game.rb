@@ -14,17 +14,17 @@ class Game
   # in the guess, and false_pin_check stops define_pins from defining erroneous white pins
   # if it detects that the guess has more occurences of that color than the @code itself.
   def define_pins
-    # 1 == white pin | 2 == red pin
-
     false_pin_check = false
     checklist = { 'red' => 0, 'blue' => 0, 'green' => 0, 'yellow' => 0, 'cyan' => 0, 'purple' => 0 }
 
     @row[:guess].each_with_index do |item, i|
       false_pin_check = true if checklist[item] >= @code.count(item)
 
+      # 1 == white pin | 2 == red pin
       if item == @code[i]
         @row[:pins].push(2)
         @row[:pins].delete_at(@row[:pins].index(1)) if false_pin_check
+        checklist[item] += 1
       elsif @code.include?(item) && !false_pin_check
         @row[:pins].push(1)
         checklist[item] += 1
