@@ -45,7 +45,7 @@ class Game
     tutorial
     make_code
     12.times do |_item|
-      puts "code: #{@code}" # debug
+      # puts "code: #{@code}"
       prompt
       define_pins
 
